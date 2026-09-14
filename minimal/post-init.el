@@ -164,6 +164,7 @@
 
 (require 'cyan-terminal)
 (require 'cyan-codex)
+(require 'cyan-opencode)
 
 (provide 'post-init)
 ;;; post-init.el ends here
