@@ -172,6 +172,8 @@
   :commands magit-status
   :bind ("C-x g" . magit-status))
 
+
+
 (require 'cyan-terminal)
 (require 'cyan-codex)
 (require 'cyan-opencode)
