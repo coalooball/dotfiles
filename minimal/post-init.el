@@ -16,7 +16,7 @@
 
 ;;; Appearance
 
-(load-theme 'tsdh-dark t)
+(load-theme 'modus-operandi-tinted t)
 
 ;;; Scratch buffer
 
@@ -60,6 +60,15 @@
 (which-key-mode 1)
 
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+
+;; Show the absolute line number on the current line and relative numbers on
+;; all other lines.
+(setq-default display-line-numbers-type 'relative
+              display-line-numbers-current-absolute t)
+
+;; Quick navigation to the beginning and end of the current buffer.
+(global-set-key (kbd "C-c g g") #'beginning-of-buffer)
+(global-set-key (kbd "C-c g G") #'end-of-buffer)
 
 (require 'cyan-editing)
 (require 'cyan-macos)
@@ -142,6 +151,7 @@
 
 ;;; Programming tools
 
+(require 'cyan-treesit)
 (require 'cyan-hurl)
 
 (use-package flymake

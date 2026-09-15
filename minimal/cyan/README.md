@@ -12,12 +12,20 @@ Flymake, Eglot and Magit. Additional features belong in this directory.
 | `cyan-terminal.el` | Ghostel settings and project-aware terminal commands |
 | `cyan-codex.el` | Codex terminal commands, buffer switching and CJK redisplay settings |
 | `cyan-hurl.el` | Automatic mode selection for `.hurl` files |
-| `hurl-mode.el` | Local Hurl major mode implementation |
+| `cyan-treesit.el` | Automatic selection of installed Tree-sitter modes; manual grammar installation |
+| `hurl-ts-mode.el` | Tree-sitter Hurl highlighting; requires a manually installed grammar |
 
 `post-init.el` adds this directory to `load-path` relative to its own location
 and loads modules explicitly with `require`. The terminal module depends on the
 workspace module; the Codex module depends on the terminal module. Hurl's major
 mode is loaded on demand when a `.hurl` file opens.
+
+Tree-sitter grammars are never downloaded automatically. To install one, run
+`M-x treesit-install-language-grammar`, select a language (for example, `bash`
+or `hurl`), and accept the default installation directory. Reload
+`cyan-treesit.el` or restart Emacs afterward to refresh file associations.
+Without a grammar, existing ordinary modes remain available; Hurl reports
+the manual installation command if its required grammar is missing.
 
 Keep existing command names and key bindings when moving configuration. For a
 new feature, add a `cyan-NAME.el` file with lexical binding, declare dependencies
