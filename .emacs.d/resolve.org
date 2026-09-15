@@ -1,11 +1,11 @@
-#+title: Emacs 问题解决记录
+#+title: Emacs Troubleshooting Notes
 #+startup: overview
 
-* Dired 打开目录时 Vertico 报错
+* Vertico error when opening a directory with Dired
 
-** 症状
+** Symptoms
 
-执行 ~M-x dired~ 后，Vertico 在显示目录候选时反复产生回溯。关键错误如下：
+After running ~M-x dired~, Vertico repeatedly produced backtraces while displaying directory candidates. The key error was:
 
 #+begin_example
 Vertico detected an error:
@@ -17,39 +17,39 @@ Vertico detected an error:
   vertico--affixate(...)
 #+end_example
 
-** 原因
+** Cause
 
-问题不在 Dired 或 Vertico，而是更新软件包时生成了错误的 Marginalia 字节码：
+The problem was not in Dired or Vertico, but in incorrect Marginalia bytecode generated during a package update:
 
-- Emacs 30.2 内置的 ~seconds-to-string~ 只接受一个参数。
-- Marginalia 需要通过 Compat 调用支持额外参数的兼容实现。
-- Marginalia 源码使用的是正确的 ~compat-call~，但生成的 ~marginalia.elc~
-  错误地直接调用了 Emacs 内置函数，并传入三个参数。
-- 因此出现 ~wrong-number-of-arguments (1 . 1) 3~。
+- The ~seconds-to-string~ built into Emacs 30.2 accepts only one argument.
+- Marginalia needs a compatibility implementation that supports extra arguments via Compat.
+- Marginalia's source uses the correct ~compat-call~, but the generated ~marginalia.elc~
+  incorrectly called the Emacs built-in directly and passed three arguments.
+- This produced ~wrong-number-of-arguments (1 . 1) 3~.
 
-这种情况可能发生在同一个 Emacs 会话中加载旧版 Compat 后再升级软件包。仅更新包不一定会重新生成正确的字节码。
+This can happen when an old version of Compat is loaded in the same Emacs session before packages are upgraded. Simply updating the package does not necessarily regenerate correct bytecode.
 
-** 推荐修复
+** Recommended fix
 
-在 Emacs 中执行：
+Run the following in Emacs:
 
 #+begin_example
 M-x package-recompile RET marginalia RET
 #+end_example
 
-然后完全退出并重新启动 Emacs。如果使用 Emacs daemon，需要同时重启 daemon，而不只是关闭当前 frame。
+Then fully quit and restart Emacs. If you use the Emacs daemon, restart the daemon as well, not just the current frame.
 
-重启后再次执行：
+After restarting, run the following again:
 
 #+begin_example
 M-x dired
 #+end_example
 
-目录候选应能正常显示，且不再出现 Vertico 回溯。
+Directory candidates should display normally, with no further Vertico backtrace.
 
-** 不重启的处理方式
+** Fix without restarting
 
-重新编译后，可以尝试立即重新加载 Marginalia：
+After recompiling, you can try reloading Marginalia immediately:
 
 #+begin_src emacs-lisp
 (progn
@@ -57,27 +57,27 @@ M-x dired
   (load (locate-library "marginalia") nil 'nomessage))
 #+end_src
 
-如果问题仍然存在，应完全重启 Emacs。
+If the problem persists, fully restart Emacs.
 
-** 临时绕过
+** Temporary workaround
 
-暂时关闭 Marginalia 注解后，Dired 和 Vertico 仍可使用：
+Temporarily disabling Marginalia annotations keeps Dired and Vertico usable:
 
 #+begin_src emacs-lisp
 (marginalia-mode -1)
 #+end_src
 
-此方法只隐藏补全候选的附加信息，不修复错误的字节码。
+This only hides the extra information on completion candidates; it does not fix the bad bytecode.
 
-** 验证 Compat
+** Verifying Compat
 
-下面的表达式应返回 ~"1h"~，而不是产生参数数量错误：
+The following expression should return ~"1h"~ instead of raising an argument-count error:
 
 #+begin_src emacs-lisp
 (compat-call seconds-to-string 3600 'expanded 'abbrev)
 #+end_src
 
-如果重新编译 Marginalia 后仍然失败，可依次重新编译 Compat 和 Marginalia，重启后再测试：
+If it still fails after recompiling Marginalia, recompile Compat and Marginalia in order, then restart and test again:
 
 #+begin_example
 M-x package-recompile RET compat RET
