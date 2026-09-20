@@ -133,6 +133,13 @@
          ("M-g i" . consult-imenu)
          ("M-s l" . consult-line)
          ("M-s r" . consult-ripgrep))
+  :config
+  ;; Moving through ripgrep results previews a file on every key press by
+  ;; default.  Debounce that preview so large files and expensive modes do not
+  ;; make candidate navigation stutter.
+  (consult-customize
+   consult-ripgrep consult-git-grep consult-grep
+   :preview-key '(:debounce 0.5 any))
   :init
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref))
