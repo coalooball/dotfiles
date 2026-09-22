@@ -59,7 +59,14 @@
 (global-so-long-mode 1)
 (which-key-mode 1)
 
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+;; Keep line numbers off by default: relative `display-line-numbers-mode'
+;; adds redisplay overhead in every programming buffer.  Toggle globally.
+(defun my/toggle-line-numbers ()
+  "Toggle `global-display-line-numbers-mode' on and off."
+  (interactive)
+  (global-display-line-numbers-mode (if global-display-line-numbers-mode 0 1)))
+
+(global-set-key (kbd "C-c l n") #'my/toggle-line-numbers)
 
 ;; Show the absolute line number on the current line and relative numbers on
 ;; all other lines.
@@ -133,13 +140,10 @@
          ("M-g i" . consult-imenu)
          ("M-s l" . consult-line)
          ("M-s r" . consult-ripgrep))
-  :config
-  ;; Moving through ripgrep results previews a file on every key press by
-  ;; default.  Debounce that preview so large files and expensive modes do not
-  ;; make candidate navigation stutter.
-  (consult-customize
-   consult-ripgrep consult-git-grep consult-grep
-   :preview-key '(:debounce 0.5 any))
+  :custom
+  ;; Debounce file previews: rapid candidate navigation must not re-open a
+  ;; file (parse + fontify + auto-revert watch) on every keystroke.
+  (consult-preview-key '(:debounce 0.2 any))
   :init
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref))

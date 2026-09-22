@@ -3,7 +3,7 @@
 (require 'use-package)
 (require 'treesit)
 
-(setq treesit-font-lock-level 4)
+(setq treesit-font-lock-level 3)
 
 (use-package treesit-auto
   :if (treesit-available-p)

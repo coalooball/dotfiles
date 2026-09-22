@@ -15,3 +15,9 @@
                         (replace-match "https://ghproxy.com/https://github.com" t t (plist-get entry :url))
                       (plist-get entry :url))))
                 treesit-language-source-alist)))
+
+;; Raise the GC thresholds that minimal-emacs.d restores after startup.
+;; 32MB is too low once tree-sitter, Eglot and Ghostel generate allocation
+;; churn, and frequent GC shows up as typing/completion pauses.
+(setq minimal-emacs-gc-cons-threshold (* 128 1024 1024)
+      minimal-emacs-gc-cons-percentage 0.5)
