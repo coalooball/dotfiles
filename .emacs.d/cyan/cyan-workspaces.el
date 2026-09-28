@@ -30,7 +30,7 @@
   (tabspaces-project-switch-opens-workspace t)
   (tabspaces-session t)
   ;; Do not restore sessions automatically at startup.  A saved Ghostel
-  ;; window can respawn its PTY (and a Codex TUI) during startup; restoring
+  ;; window can respawn its PTY during startup; restoring
   ;; several such buffers at once can saturate the Emacs event loop and make
   ;; the NS frame appear frozen.  Sessions remain available through
   ;; `M-x tabspaces-restore-session' when an explicit restore is wanted.

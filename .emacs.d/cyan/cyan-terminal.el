@@ -116,8 +116,7 @@ With DIRECTION `below' or `right', split the current window accordingly."
   ;; to Ghostel's strict terminal grid.
   (setq-default ghostel-glyph-scale-floor 1.0)
   ;; Keep high-volume terminal output from materializing an oversized
-  ;; text-property buffer in Emacs.  Codex uses the alternate screen below,
-  ;; but this cap also protects regular Ghostel terminals.
+  ;; text-property buffer in Emacs.
   (setq ghostel-max-scrollback (* 1 1024 1024))
   (with-eval-after-load 'project
     (add-to-list 'project-switch-commands
