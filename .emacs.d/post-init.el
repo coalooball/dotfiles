@@ -164,6 +164,7 @@
 
 (require 'cyan-treesit)
 (require 'cyan-hurl)
+(require 'cyan-java)
 
 (use-package flymake
   :ensure nil

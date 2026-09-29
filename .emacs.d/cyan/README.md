@@ -10,13 +10,14 @@ Flymake, Eglot and Magit. Additional features belong in this directory.
 | `cyan-macos.el` | macOS frame handling and window shortcuts |
 | `cyan-workspaces.el` | Tabspaces, session settings and the Consult workspace buffer source |
 | `cyan-terminal.el` | Ghostel settings and project-aware terminal commands |
+| `cyan-java.el` | Java editing through Eglot and jdtls |
 | `cyan-hurl.el` | Automatic mode selection for `.hurl` files |
 | `cyan-treesit.el` | Automatic selection of installed Tree-sitter modes; manual grammar installation |
 | `hurl-ts-mode.el` | Tree-sitter Hurl highlighting; requires a manually installed grammar |
 
 `post-init.el` adds this directory to `load-path` relative to its own location
 and loads modules explicitly with `require`. The terminal module depends on the
-workspace module. Hurl's major mode is loaded on demand when a `.hurl` file opens.
+workspace module. Java support uses an unpacked jdtls distribution under `~/tools/jdtls`. Hurl's major mode is loaded on demand when a `.hurl` file opens.
 
 Tree-sitter grammars are never downloaded automatically. To install one, run
 `M-x treesit-install-language-grammar`, select a language (for example, `bash`
